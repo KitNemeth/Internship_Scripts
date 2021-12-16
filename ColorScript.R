@@ -27,7 +27,7 @@ elev$combinedGeo_color <- putInRGBSpace(elev,Rvar = "lat",Gvar = "long", Bvar = 
 plot(elev$long,elev$lat,col=elev$combinedGeo_color,pch=19,cex=3)
 
 
-andean$combinedGeo <- rep("LatLongElev",nrow(andean))
+andean$combinedGeo <- rep("LLE",nrow(andean))
 andean$combinedGeo_color <- putInRGBSpace(andean,Rvar = "Lat",Gvar = "Long",Bvar= "Elev")
 plot(andean$Lat,andean$Long,col=andean$combinedGeo_color,pch=19,cex=3)
 
@@ -35,7 +35,7 @@ andean$combinedLatLong <- rep("LatLong",nrow(andean))
 andean$combinedLatLong_color <- putInRGBSpace(andean,Rvar = "Lat",Gvar= "Long")
 plot(andean$Lat,andean$Long,col=andean$combinedLatLong_color,pch=19,cex=3)
 
-Americas$combinedGeo <- rep("LatLongElev",nrow(Americas))
+Americas$combinedGeo <- rep("LLE",nrow(Americas))
 Americas$combinedGeo_color <- putInRGBSpace(Americas,Rvar = "Lat",Gvar = "Long",Bvar= "Elev")
 plot(Americas$Lat,Americas$Long,col=Americas$combinedGeo_color,pch=19,cex=3)
 

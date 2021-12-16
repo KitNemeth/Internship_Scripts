@@ -5,11 +5,9 @@ Sys.setenv(lang="EN")
 library(Hmisc)
 library(RColorBrewer)
 library(bio3d)
-library(RPostgres)
 library(jsonlite)
 library(R.utils)
 library(stringr)
-library(DBI)
 library(rworldmap)
 library(elevatr)
 library(dplR)
@@ -926,7 +924,7 @@ get.coords.TRG <- function(coords, x0, y0, z0=NULL) {
   if (is.null(z0)==F & is.na(coords$compassdeg)==F) {
     zOff <- round(tan(coords$compassdeg*(pi/180))*coords$compasshd,digits = 1)
     if ((zOff==coords$compassh)==F) #printf("Compassh value offsets by %g. Adjusted height accordingly\n",zOff-coords$compassh)
-      z <- z0+zOff
+    z <- z0+zOff
   }
   return(data.frame(x=x,y=y,z=z))
 }
@@ -999,13 +997,13 @@ plotEachMappoint <- function(cleanmo,outdir,datasetName) {
 #' @param pdfFile optional, will output plots to pdf
 #' @return MDS fit object
 #' @export
-MDS <- function(dist,info,group,groupbg,heat=F,k=2,main=NULL,ptSize=.6,pdfFile=NULL,cex.main = 1, cex.lab = 1, cex.axis = 1,mar= c(5, 4, 4, 2) + 0.1) {
+MDS <- function(dist,info,group,groupbg,heat=F,k=2,main=NULL,ptSize=.6,pdfFile=NULL,cex.main = 1, cex.lab = 0.7, cex.axis = 0.7,mar= c(5, 4, 2.3, 2)) {
   if (is.character(dist) && file.exists(dist)) {
     #distances <- read.table(dist,sep="\t",header=F,skip=5,row.names=1,as.is=T) #hamming (IBS) distance matrix where only rownames are labelled (TASSEL format)
     distances <- as.data.frame(fread(dist,sep="\t",skip=5,stringsAsFactors = F)) #hamming (IBS) distance matrix where only rownames are labelled (TASSEL format)
     rownames(distances) <- distances$V1
     distances <- distances[,2:ncol(distances)]
-    colnames(distances) <- rownames(distances)
+    colnames(distances) <- rownames(distancesf)
     if (nrow(distances)!=ncol(distances)) printf("Cannot correctly read in %s! Make sure it's a valid tassel IBS distance matrix",dist)
   } else if (nrow(dist)==ncol(dist)) {distances <- dist
   } else {
@@ -1066,10 +1064,10 @@ MDS <- function(dist,info,group,groupbg,heat=F,k=2,main=NULL,ptSize=.6,pdfFile=N
       color.legend <- col[,paste(group,"color",sep="_")][match(legend,col[,group])]
       color.acc <- col[,paste(group,"color",sep="_")][match(rownames(fit$points[]),col[,taxonCol])]
     }
-  }# plot solution
+    }# plot solution
   if (is.null(pdfFile)==F) svg(pdfFile,width = 6,height = 5)
-  par(mar=mar)
   for (i in 1:(k-1)) {
+    par(mar=mar)
     j <- i+1
     x <- fit$points[,i]
     y <- fit$points[,j]
@@ -1079,7 +1077,7 @@ MDS <- function(dist,info,group,groupbg,heat=F,k=2,main=NULL,ptSize=.6,pdfFile=N
       xrange <- (par("usr")[2]-par("usr")[1])
       yrange <- (par("usr")[4]-par("usr")[3])
       addColorScale(info = col,heatmap = heatmap,colorTerm = group,xl <- c(par("usr")[2]-xrange/5,par("usr")[2]-xrange/6),yl <- c(par("usr")[3]+yrange/4,par("usr")[4]-yrange/4))
-    }else {legend(x = "bottomright",legend = legend,col=color.legend,pch=19,cex=0.75)}
+    }else {legend(x = "bottomright",legend = legend,col=color.legend,pch=19,cex=0.7)}
   }
   if (is.null(pdfFile)==F) dev.off()
   return(list(fit=fit,info=col,d=distances))
