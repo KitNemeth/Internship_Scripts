@@ -1,12 +1,25 @@
 #Admixture
 library(data.table)
 setwd("L:/Krisztian/MasterLandraceTeoInbredGBS_collapseDist0.02_20210810")
-file <- "MasterLandraceTeoInbredGBS_collapseDist0.02_EastWestAndes_admixfilt_rmvCloseKin0.05_poly_minSiteCov0.5_minTaxaCov0.3_RmvHighLD_rmvThird" #"ZeaGBSv27_20150108AGPv3MatchSites_subsetBy12S_13S_RIMMA_JGSTeo_NFlint_TP_ALLsingleRep_HWEByDepth9_minTaxaCov.3_rmvThird_poly_minSiteCov.5_removeCloseKin0.15." #ZeaGBSv27_20150108AGPv3.hmp_subBy12S_13S_RIMMA_NAMHighCov_MR_TIL_Goldstein_TP15_JGSTeoHWEByDepth9_minTaxaCov.3_rmvThird_poly_minSiteCov.5_removeCloseKin.
-order <- fread("Andeanorder.txt", header=T)
-col= c("#9f9244",
-        "#7f64b9",
-        "#c36785")
-k <- 3
+file <- "MasterLandraceTeoInbredGBS_collapseDist0.02_collapseSEED_CIMMYT_12S_13S_RIMMA_Teosinte_collapse_admixfilt_rmvCloseKin0.03_poly_minSiteCov0.5_minTaxaCov0.3_RmvHighLD_rmvThird" #"ZeaGBSv27_20150108AGPv3MatchSites_subsetBy12S_13S_RIMMA_JGSTeo_NFlint_TP_ALLsingleRep_HWEByDepth9_minTaxaCov.3_rmvThird_poly_minSiteCov.5_removeCloseKin0.15." #ZeaGBSv27_20150108AGPv3.hmp_subBy12S_13S_RIMMA_NAMHighCov_MR_TIL_Goldstein_TP15_JGSTeoHWEByDepth9_minTaxaCov.3_rmvThird_poly_minSiteCov.5_removeCloseKin.
+order <- fread("TaxaOrder_AL.txt", header=T)
+col= c("#d14a64",
+       "#5ebf77",
+       "#5c3889",
+       "#a5b640",
+       "#6971d7",
+       "#ca812d",
+       "#6d8dd7",
+       "#578431",
+       "#ca74c7",
+       "#43c8ac",
+       "#8c2b66",
+       "#b9a853",
+       "#d55f90",
+       "#a96837",
+       "#a24047",
+       "#c44d3c")
+k <- 16
 
 tbl=read.table(paste(file,".",k,".Q",sep = ""))
 
@@ -18,13 +31,13 @@ tbl <- tbl[order(tbl$OrigOrder),]
 str(tbl)
 
 #Change to whatever variable you sort by
-#tbl <- tbl[-c(which(is.na(tbl$Elevation)==T)),]
-tbl$`Andean Region1` <- factor(tbl$`Andean Region1`)
+tbl <- tbl[-c(which(is.na(tbl$Elevation)==T)),]
+tbl$Source <- factor(tbl$Source)
 rownames(tbl) <- seq(from = 1,to=nrow(tbl),by=1)
 
 breaks <- 0
 for (i in 2:nrow(tbl)) {
-  if (tbl$`Andean Region1`[i]!=tbl$`Andean Region1`[i-1]) {
+  if (tbl$Source[i]!=tbl$Source[i-1]) {
     breaks <- c(breaks,i-1)
   }
 }
@@ -35,14 +48,14 @@ breaks <- c(breaks,nrow(tbl))
 spaces <- rep(0,nrow(tbl))
 spaces[breaks[2:(length(breaks)-1)]+1] <- 2
 labels <- rep("",nrow(tbl))
-labels[breaks[1:(length(breaks)-1)]+((breaks[2:length(breaks)]-breaks[1:(length(breaks)-1)])/2)] <- gsub("_"," ",tbl$`Andean Region1`[breaks])
+labels[breaks[1:(length(breaks)-1)]+((breaks[2:length(breaks)]-breaks[1:(length(breaks)-1)])/2)] <- gsub("_"," ",tbl$Source[breaks])
 
-out="Admix1.svg"
+out="AdmixALwithTeo11.svg"
 #svg(out)
 svg(out,width=20,height=10)
 par(mfrow = c(3, 1),     # 2x1 layout
       oma = c(4, 2, 2, 0), # two rows of text at the outer left and bottom margin
-      mar = c(0, 3, 0, 0), # space for one row of text at ticks and to separate plots
+      mar = c(0, 3, 0, 10), # space for one row of text at ticks and to separate plots
       mgp = c(2, 1, 0),    # axis label at 2 rows distance, tick labels at 1 row
       xpd = FALSE)            # allow content to protrude into outer margin (and beyond)
 
@@ -51,23 +64,25 @@ par(mfrow = c(3, 1),     # 2x1 layout
 #Elevation plot
 elev <- cbind(tbl$Elevation/max(tbl$Elevation[is.na(tbl$Elevation)==F]),1-(tbl$Elevation/max(tbl$Elevation[is.na(tbl$Elevation)==F])))
 barplot(t(as.matrix(tbl$Elevation)),bty = "l", col=c("black","white"),yaxt="n", xaxt="n", border=NA,xlim=c(0,nrow(tbl)),width = 1,space = spaces,names.arg=rep("",nrow(tbl)),)
-axis(2, line=-5.2,seq(0,5000,1000),font=1, cex.axis=2)
-title(ylab="Elevation (m)", line=-1, cex.lab=3)
-segments(x0=0,y0=1700,x1=287,col="red", lty=2)
+axis(2, line=-4,seq(0,5000,1000),font=1)
+title(ylab="Elevation (m)", line=-1)
+segments(x0=0,y0=1000,x1=1130,y1=1000,col="Black",lwd = 0.5, lty = "dotted")
+segments(x0=0,y0=2000,x1=1130,y1=2000,col="Black",lwd = 0.5, lty = "dotted")
+segments(x0=0,y0=3000,x1=1130,y1=3000,col="Black",lwd = 0.5, lty = "dotted")
 
 #segments(x0=0,y0=0,x1=0,y1=4000,col="Black")
-segments(x0=0,y0=0,x1=287,y1=0,col="Black")
+segments(x0=0,y0=0,x1=902,y1=0,col="Black")
 #axis(1,at = breaks[1:(length(breaks)-1)]+((0:(length(breaks)-2))*2)+((breaks[2:length(breaks)]-breaks[1:(length(breaks)-1)])/2),lwd=0,lwd.ticks=1,labels = gsub("_"," ",tbl$Source[breaks]),cex.axis= .5, las=2)
 #Admixture plot
-x <-barplot(t(as.matrix(tbl[1:k])), col=col[1:k], yaxt="n", xaxt="n",border=NA,xlim=c(0,nrow(tbl)),width = 1,space = spaces,names.arg=rep("",nrow(tbl)))
-axis(1,line=-0.1,at = breaks[1:(length(breaks)-1)]+((0:(length(breaks)-2))*2)+((breaks[2:length(breaks)]-breaks[1:(length(breaks)-1)])/2),lwd=0,lwd.ticks=1,labels = gsub("_"," ",tbl$`Andean Region1`[breaks]), las=2, cex.axis=2)
-axis(2, line=-5.2,seq(0.25,0.75,0.25),font=1, cex.axis=2)
+barplot(t(as.matrix(tbl[1:k])), col=col[1:k], yaxt="n", xaxt="n",border=NA,xlim=c(0,nrow(tbl)),width = 1,space = spaces,names.arg=rep("",nrow(tbl)))
+axis(1,line=-0.1,at = breaks[1:(length(breaks)-1)]+((0:(length(breaks)-2))*2)+((breaks[2:length(breaks)]-breaks[1:(length(breaks)-1)])/2),lwd=0,lwd.ticks=1,labels = gsub("_"," ",tbl$Source[breaks]), las=2)
+axis(2, line=-5,seq(0.25,0.75,0.25),font=1)
 #segments(x0=0,y0=0,x1=0,y1=1,col="Black")
-segments(x0=0,y0=0,x1=287,y1=0,col="Black")
-title(ylab="Ancestry", line=-1, cex.lab=3)
+segments(x0=0,y0=0,x1=902,y1=0,col="Black")
+title(ylab="Ancestry", line=-1)
 dev.off()
 
-out="AdmixCVFST.svg"
+out="AdmixCVFSTALwithTeo.svg"
 #svg(out)
 svg(out,width=20,height=10)
 line = 1
@@ -84,7 +99,7 @@ cv$K <- as.numeric(gsub(pattern = ")",replacement = "",x = gsub(pattern = "CV er
 cv<-cv[order(as.numeric(cv$K)),]
 #pdf(file = paste(file,"_rmvThird.CV.pdf",sep=""),width=4,height=4,useDingbats = F)
 plot(x=cv$K,y=cv$V2,type = "o", main="5-fold cross validated error",xlab="K",ylab="Prediction error",pch=19)
-abline(v=3, col="red", lty=2, lwd= 1.5)
+abline(v=9, col="red", lty=2, lwd= 1.5)
 #mtext("c",font = 2, side=side, line=line, cex=cex, adj=adj)
 
 

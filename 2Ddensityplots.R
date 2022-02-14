@@ -6,11 +6,11 @@ library(devtools)
 library(ggConvexHull)
 
 tblv1 <- tbl
-tblv1$v100 <- tblv1$V1 * 100
-tblv1$v100 <- signif(tblv1$v100 ,2)
-tblv1$v100 <- round(tblv1$v100 ,0)
-tblv1 <- tblv1[ which(tblv1$v100 > 0),]
-tblv1 <- as.data.frame(lapply(tblv1, rep, tblv1$v100))
+tblv1$V100 <- tblv1$V1 * 100
+tblv1$V100 <- signif(tblv1$V100 ,2)
+tblv1$V100 <- round(tblv1$V100 ,0)
+tblv1 <- tblv1[ which(tblv1$V100 > 0),]
+tblv1 <- as.data.frame(lapply(tblv1, rep, tblv1$V100))
 
 ggplot(tblv1, aes(x = Longitude, y = Latitude)) + 
   coord_equal() + 
@@ -34,7 +34,7 @@ ggplot(tblv2, aes(x = Longitude, y = Latitude)) +
   xlab('Longitude') + 
   ylab('Latitude') + 
   stat_density2d(aes(fill = ..level..), alpha = .5,
-                 geom = "polygon", colour="white", data = tblv2) +
+                 geom = "polygon", colour="white",size =0.01, data = tblv2) +
   scale_x_continuous(limits = c(-85, -55)) +
   scale_y_continuous(limits = c(-40, 18)) +
   scale_fill_gradient(low = "#7f64b900", high = "#7f64b9")

@@ -1,8 +1,8 @@
 #Admixture
 library(data.table)
 setwd("L:/Krisztian/MasterLandraceTeoInbredGBS_collapseDist0.02_20210810")
-file <- "MasterLandraceTeoInbredGBS_collapseDist0.02_SouthAmericanLandraces_admixfilt_rmvCloseKin0.05_poly_minSiteCov0.5_minTaxaCov0.3_RmvHighLD_rmvThird" #"ZeaGBSv27_20150108AGPv3MatchSites_subsetBy12S_13S_RIMMA_JGSTeo_NFlint_TP_ALLsingleRep_HWEByDepth9_minTaxaCov.3_rmvThird_poly_minSiteCov.5_removeCloseKin0.15." #ZeaGBSv27_20150108AGPv3.hmp_subBy12S_13S_RIMMA_NAMHighCov_MR_TIL_Goldstein_TP15_JGSTeoHWEByDepth9_minTaxaCov.3_rmvThird_poly_minSiteCov.5_removeCloseKin.
-order <- fread("TaxaOrder2.txt", header=T)
+file <- "MasterLandraceTeoInbredGBS_collapseDist0.02_collapseSEED_CIMMYT_12S_13S_RIMMA_Teosinte_collapse_subset_minTaxa01_admixfilt_rmvCloseKin0.03_poly_minSiteCov0.5_minTaxaCov0.3_RmvHighLD_rmvThird" #"ZeaGBSv27_20150108AGPv3MatchSites_subsetBy12S_13S_RIMMA_JGSTeo_NFlint_TP_ALLsingleRep_HWEByDepth9_minTaxaCov.3_rmvThird_poly_minSiteCov.5_removeCloseKin0.15." #ZeaGBSv27_20150108AGPv3.hmp_subBy12S_13S_RIMMA_NAMHighCov_MR_TIL_Goldstein_TP15_JGSTeoHWEByDepth9_minTaxaCov.3_rmvThird_poly_minSiteCov.5_removeCloseKin.
+order <- fread("TaxaOrder3.txt", header=T)
 col= c("#be943b",
        "#6777cf",
        "#71a44c",
