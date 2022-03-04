@@ -14,7 +14,7 @@ dataM$Lat = as.numeric(dataM$Lat)
 dataM$Long = as.numeric(dataM$Long)
 dataM$Elev = as.numeric(dataM$Elev)
 
-Americas <- dataM[which(dataM$Population%in%c("Landrace - Ames Stock Center","Landrace - RIMMA","Landrace - NSS","Landrace - AndeanMiguel","Landrace - SEED") & dataM$Lat!=""  & dataM$Elev!=""),]
-#Americas <- dataM[which(dataM$Population%in%c("Landrace - Ames Stock Center","Landrace - RIMMA","Landrace - NSS","Landrace - AndeanMiguel","Landrace - SEED","Teosinte") & dataM$Lat!=""  & dataM$Elev!=""),]
+#Americas <- dataM[which(dataM$Population%in%c("Landrace - Ames Stock Center","Landrace - RIMMA","Landrace - NSS","Landrace - AndeanMiguel","Landrace - SEED") & dataM$Lat!=""  & dataM$Elev!=""),]
+Americas <- dataM[which(dataM$Population%in%c("Landrace - Ames Stock Center","Landrace - RIMMA","Landrace - NSS","Landrace - AndeanMiguel","Landrace - SEED","Teosinte") & dataM$Lat!=""  & dataM$Elev!=""),]
 
 mds_Americas <- MDS(dist = allDist,info = Americas,group = "Country",k = 2,main = "American Accessions",pdfFile = "MasterLandraceTeoInbredGBS_collapseDist0.02_Americas_MDS_Country.svg")
