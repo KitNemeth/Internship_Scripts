@@ -48,27 +48,19 @@ tblv6$V100 <- round(tblv6$V100 ,0)
 tblv6 <- tblv6[ which(tblv6$V100 > 0),]
 tblv6 <- as.data.frame(lapply(tblv6, rep, tblv6$V100))
 
-tblv7 <- tbl
-tblv7$V100 <- tblv7$V7 * 700
-tblv7$V100 <- signif(tblv7$V100 ,2)
-tblv7$V100 <- round(tblv7$V100 ,0)
-tblv7 <- tblv7[ which(tblv7$V100 > 0),]
-tblv7 <- as.data.frame(lapply(tblv7, rep, tblv7$V100))
-
 tblv1$label <- "K1"
 tblv2$label <- "K2"
 tblv3$label <- "K3"
 tblv4$label <- "K4"
 tblv5$label <- "K5"
 tblv6$label <- "K6"
-tblv7$label <- "K7"
 
-Bindtbl <- rbind(tblv2,tblv3,tblv1,tblv4, tblv5, tblv6, tblv7)
-colnames(Bindtbl)[13] <- "lon"
-colnames(Bindtbl)[12] <- "lat"
+Bindtbl <- rbind(tblv2,tblv3,tblv1,tblv4, tblv5, tblv6)
+colnames(Bindtbl)[12] <- "lon"
+colnames(Bindtbl)[11] <- "lat"
 
-colnames(tbl)[13] <- "lon"
-colnames(tbl)[12] <- "lat"
+colnames(tbl)[12] <- "lon"
+colnames(tbl)[11] <- "lat"
 tbl$V100 <- ""
 tbl$label <- ""
 
@@ -96,14 +88,13 @@ svg(out)
 
 ggmap(us_main_map) +
   stat_density2d(aes(fill = label, alpha=..level..),
-                                   geom = "polygon", bins=1000,size =0.5, data = Bindtbl, contour=TRUE) +
-  scale_fill_manual(values=c("K1"="#be943b",
-                              "K2"="#6777cf",
-                              "K3"="#71a44c",
-                              "K4"="#9750a1",
-                              "K5"="#46c19a",
-                              "K6"="#b94a73",
-                              "K7"="#b9503d")) +
+                                   geom = "polygon", bins=80,size =0.5, data = Bindtbl, contour=TRUE) +
+  scale_fill_manual(values=c("K1"="#6778d0",
+                              "K2"="#a5a23f",
+                              "K3"="#9750a1",
+                              "K4"="#51b171",
+                              "K5"="#ba496b",
+                              "K6"="#b95f37")) +
   geom_point(data = tbl, size=0.3, aes(x = lon, y = lat,)) +
   theme_classic()   
 dev.off()

@@ -105,15 +105,15 @@ svg(out)
 
 ggmap(us_main_map) +
   stat_density2d(aes(fill = label, alpha=..level..),
-                                   geom = "polygon", bins=40,size =0.5, data = Bindtbl, contour=TRUE) +
-  scale_fill_manual(values=c("K1"= "#b9503d",
-                             "K2" = "#d24693",
-                             "K3" = "#71a44c",
-                             "K4" = "#b94a73",
-                             "K5" = "#c2823f",
-                             "K6" = "#6295cd",
-                             "K7" = "#cc5041",
-                             "K8" = "#be943b")) +
+                                   geom = "polygon", bins=30,size =0.5, data = Bindtbl, contour=TRUE) +
+  scale_fill_manual(values=c("K1"= "#59398d",
+                             "K2" = "#6d83da",
+                             "K3" = "#cf9d3a",
+                             "K4" = "#b54673",
+                             "K5" = "#45c097",
+                             "K6" = "#ba4c46",
+                             "K7" = "#968a3d",
+                             "K8" = "#bb6130")) +
   geom_point(data = tbl, size=0.3, aes(x = lon, y = lat,)) +
   theme_classic()   
 dev.off()

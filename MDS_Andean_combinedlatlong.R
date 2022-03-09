@@ -21,7 +21,7 @@ hist(andean$`Proportion Missing`)
 
 #andean <- dataM[which(dataM$Geographic%in%c("Andean","SA_Low") & dataM$Accession!="Guatemala" & dataM$Lat!=""),]
 
-andean <- dataM[which(dataM$Lat<=13.45 & dataM$Long>=-90 & dataM$Lat!="" & dataM$Public!="FALSE" & dataM$Country!="Costa Rica" & dataM$Country!="Trinidad and Tobago" & dataM$Country!="Grenada" & dataM$Country!="Saint Vincent and the Gredines" & dataM$Country!="Panama" & dataM$Country!="Nicaragua" & dataM$Country!="Barbados"),] 
+andean <- dataM[which(dataM$Lat<=13.45 & dataM$Long>=-90 & dataM$Lat!="" & dataM$Public!="FALSE" & dataM$Country!="Costa Rica" & dataM$Country!="Trinidad and Tobago" & dataM$Country!="Grenada" & dataM$Country!="Saint Vincent and the Grenadines" & dataM$Country!="Panama" & dataM$Country!="Nicaragua" & dataM$Country!="Barbados"),] 
 #andean <- dataM[which(dataM$Lat<=13.45 & dataM$Long>=-90 & dataM$Lat!="" & dataM$Country!="COSTA RICA" & dataM$Country!="TRINIDAD AND TOBAGO" & dataM$Country!="GREDA" & dataM$Country!="SAINT VINCENT AND THE GREDINES" & dataM$Country!="PAMA" & dataM$Country!="NICARAGUA" & dataM$Country!="BARBADOS" | dataM$TaxaNum==14257),]
 #andean2 <- rbind(andean,  dataM[which(dataM$TaxaNum==14257),])
 

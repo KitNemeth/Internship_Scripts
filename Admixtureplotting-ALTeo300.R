@@ -3,21 +3,22 @@ library(data.table)
 setwd("L:/Krisztian/MasterLandraceTeoInbredGBS_collapseDist0.02_20210810")
 file <- "MasterLandraceTeoInbredGBS_collapseDist0.02_collapseSEED_ALwithteo_subset_minTaxa01_admixfilt_rmvCloseKin0.03_poly_minSiteCov0.5_minTaxaCov0.3_RmvHighLD_rmvThird" #"ZeaGBSv27_20150108AGPv3MatchSites_subsetBy12S_13S_RIMMA_JGSTeo_NFlint_TP_ALLsingleRep_HWEByDepth9_minTaxaCov.3_rmvThird_poly_minSiteCov.5_removeCloseKin0.15." #ZeaGBSv27_20150108AGPv3.hmp_subBy12S_13S_RIMMA_NAMHighCov_MR_TIL_Goldstein_TP15_JGSTeoHWEByDepth9_minTaxaCov.3_rmvThird_poly_minSiteCov.5_removeCloseKin.
 order <- fread("TaxaOrder_AL.txt", header=T)
-col= c("#628bcb",
-       "#63b750",
-       "#bf4fb4",
-       "#b2b045",
-       "#7b65cc",
-       "#dd974a",
-       "#d089c5",
-       "#5b7e3b",
-       "#db447f",
-       "#4eb89c",
-       "#cc542b",
-       "#9d496b",
-       "#956d32",
-       "#ce5f5e")
-k <- 14
+col= c("#d69138",
+       "#677fd8",
+       "#6fb24b",
+       "#5a3789",
+       "#b4b03f",
+       "#bf73cb",
+       "#50bc77",
+       "#c15a9a",
+       "#43c9b0",
+       "#b34267",
+       "#9fba6a",
+       "#ba4c46",
+       "#4c7224",
+       "#bf5a2f",
+       "#a37b37")
+k <- 15
 
 tbl=read.table(paste(file,".",k,".Q",sep = ""))
 
@@ -65,21 +66,21 @@ par(mfrow = c(3, 1),     # 2x1 layout
 elev <- cbind(tbl$Elevation/max(tbl$Elevation[is.na(tbl$Elevation)==F]),1-(tbl$Elevation/max(tbl$Elevation[is.na(tbl$Elevation)==F])))
 barplot(t(as.matrix(tbl$Elevation)),bty = "l", col=c("black","white"),yaxt="n", xaxt="n", border=NA,xlim=c(0,nrow(tbl)),width = 1,space = spaces,names.arg=rep("",nrow(tbl)),)
 axis(2, line=-4.5,seq(0,5000,1000),font=1)
-title(ylab="Elevation (m)", line=-1)
-segments(x0=0,y0=1000,x1=1382,y1=1000,col="Black",lwd = 0.5, lty = "dotted")
-segments(x0=0,y0=2000,x1=1382,y1=2000,col="Black",lwd = 0.5, lty = "dotted")
-segments(x0=0,y0=3000,x1=1382,y1=3000,col="Black",lwd = 0.5, lty = "dotted")
+title(ylab="Elevation (m)", line=-1, cex.lab = 1.5)
+segments(x0=0,y0=1000,x1=1386,y1=1000,col="Black",lwd = 0.5, lty = "dotted")
+segments(x0=0,y0=2000,x1=1386,y1=2000,col="Black",lwd = 0.5, lty = "dotted")
+segments(x0=0,y0=3000,x1=1386,y1=3000,col="Black",lwd = 0.5, lty = "dotted")
 
 #segments(x0=0,y0=0,x1=0,y1=4000,col="Black")
-segments(x0=0,y0=0,x1=1382,y1=0,col="Black")
+segments(x0=0,y0=0,x1=1386,y1=0,col="Black")
 #axis(1,at = breaks[1:(length(breaks)-1)]+((0:(length(breaks)-2))*2)+((breaks[2:length(breaks)]-breaks[1:(length(breaks)-1)])/2),lwd=0,lwd.ticks=1,labels = gsub("_"," ",tbl$Source[breaks]),cex.axis= .5, las=2)
 #Admixture plot
 barplot(t(as.matrix(tbl[1:k])), col=col[1:k], yaxt="n", xaxt="n",border=NA,xlim=c(0,nrow(tbl)),width = 1,space = spaces,names.arg=rep("",nrow(tbl)))
 axis(1,line=-0.2,at = breaks[1:(length(breaks)-1)]+((0:(length(breaks)-2))*2)+((breaks[2:length(breaks)]-breaks[1:(length(breaks)-1)])/2),lwd=0,lwd.ticks=1,labels = gsub("_"," ",tbl$Source[breaks]), las=2)
 axis(2, line=-4.5,seq(0.25,0.75,0.25),font=1)
 #segments(x0=0,y0=0,x1=0,y1=1,col="Black")
-segments(x0=0,y0=0,x1=1382,y1=0,col="Black")
-title(ylab="Ancestry", line=-1)
+segments(x0=0,y0=0,x1=1386,y1=0,col="Black")
+title(ylab="Ancestry", line=-1, cex.lab = 1.5)
 dev.off()
 
 out="AdmixCVFSTALwithTeo300.svg"
@@ -99,7 +100,7 @@ cv$K <- as.numeric(gsub(pattern = ")",replacement = "",x = gsub(pattern = "CV er
 cv<-cv[order(as.numeric(cv$K)),]
 #pdf(file = paste(file,"_rmvThird.CV.pdf",sep=""),width=4,height=4,useDingbats = F)
 plot(x=cv$K,y=cv$V2,type = "o", main="5-fold cross validated error",xlab="K",ylab="Prediction error",pch=19)
-abline(v=14, col="red", lty=2, lwd= 1.5)
+abline(v=15, col="red", lty=2, lwd= 1.5)
 #mtext("c",font = 2, side=side, line=line, cex=cex, adj=adj)
 
 
@@ -114,7 +115,7 @@ for (line in 1:k) {
 }
 fst[,k] <- as.numeric(rep(0.0,k))
 par(mar=c(.1,.1,.1,.1))
-plot(1:(k+3),1:(k+3),col=col[1:k],pch=15,cex=.0001,frame.plot=F,main="Modelled FST K=14",line=-2.3,xaxt="n",yaxt="n",xpd=T,ylab="",xlab="")
+plot(1:(k+3),1:(k+3),col=col[1:k],pch=15,cex=.0001,frame.plot=F,main="Modelled FST K=15",line=-2.3,xaxt="n",yaxt="n",xpd=T,ylab="",xlab="")
 points(3:(k+1),rep(2,k-1),col=col[1:k-1],pch=15,cex=5,xpd=T)
 points(rep(2,k-1),(k+1):3,col=col[2:k],pch=15,cex=5,xpd=T)
 for (r in 1:nrow(fst)) {
