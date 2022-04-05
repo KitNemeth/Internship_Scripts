@@ -4,9 +4,8 @@ library(maps)
 library(mapdata)
 library(readr)
 library(dplyr)
-
-#install.packages("data.table")
 library(data.table)
+#install.packages("data.table")
 setwd("L:/Krisztian/MasterLandraceTeoInbredGBS_collapseDist0.02_20210810")
 source("L:/Krisztian/TRGFunctions.R")
 #dataM <- read.table("MasterLandraceTeoInbredGBS_collapseDist0.02_forMDS.txt",header=T,as.is = T,sep = "\t")
@@ -53,7 +52,7 @@ Andeanmap$lat=as.numeric(Andeanmap$lat)
 colnames(Andeanmap)[15] <- "Elev"
 
 us_bbox3 <- c(left = -95, bottom = -40, right = -30, top = 20)
-us_main_map3 <- get_stamenmap(us_bbox3, zoom = 5, maptype = "toner-lite")
+us_main_map3 <- get_stamenmap(us_bbox3, zoom = 5, maptype = "watercolor")
 
 out="AndeanMap.svg"
 svg(out)
@@ -96,6 +95,31 @@ keep$lat=as.numeric(keep$lat)
 
 out="AdmixClusterMap.svg"
 svg(out)
+
+library(sf)
+
+df.sp <- st_read("L:/Krisztian/QGIS/1901-1925.shp")
+ggmap(us_main_map2) + 
+  geom_polygon(data = df.sp, aes(x = long, y = lat, group = group)) +
+  coord_equal() + 
+  theme_map() + 
+  coord_map()
+
+
+library(rgdal)
+library(broom)
+shpfile <- readOGR(dsn = "L:/Krisztian/QGIS/1901-1925.shp", 
+                   stringsAsFactors = FALSE ) 
+shpfile <- spTransform(shpfile, "+init=epsg:4326") # transform coordinates
+tidydta2 <- tidy(shpfile, group=group) 
+
+us_bbox2 <- c(left = -120, bottom = -40, right = -30, top = 40)
+wisc <- get_stamenmap(us_bbox2, zoom = 5, maptype = "toner-lite")
+
+ggmap(wisc) +
+  geom_polygon(aes(x=long, y=lat, group=group), 
+               data=tidydta2) 
+
 
 ggmap(us_main_map2) + 
   geom_point(data = dataM,size=1.8, shape=16, aes(x = lon, y = lat, colour = Cluster)) +

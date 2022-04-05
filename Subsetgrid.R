@@ -23,7 +23,7 @@ subsetGrid <- function(Americas,N,gridSize=.5) {
   return(keep)
 }
 
-keep <- subsetGrid(Americas = Americas,N = 3,gridSize = 1.2)
+keep <- subsetGrid(Americas = Americas,N = 1,gridSize = 5)
 keep <- keep[which(keep$Taxa!="NA"),]
 
 unique(keep$Country)
@@ -35,7 +35,7 @@ write_xlsx(keep,"Americassubset.xlsx")
 Teosinte <- dataM[which(dataM$Population%in%("Teosinte")),]
 Teosinte <- Teosinte[which(Teosinte$Pedigree!="Z_diploperennis" & Teosinte$Pedigree!="Z_perennis?" & Teosinte$Pedigree!="Z_nicara" & Teosinte$Pedigree!="Z_diplop" & Teosinte$Pedigree!="Z_perenn" & Teosinte$Pedigree!="Z_perennis" & Teosinte$Pedigree!="Z_diploperennis?"),]
 
-Teosinte2 <- Teosinte[sample(nrow(Teosinte), 300), ]
+Teosinte2 <- Teosinte[sample(nrow(Teosinte), 21), ]
 unique(Teosinte2$Accession)
 write_xlsx(Teosinte2,"Teosintesubset.xlsx")
 

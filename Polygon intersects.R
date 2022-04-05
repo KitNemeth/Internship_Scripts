@@ -14,8 +14,10 @@ tt <- read_sf("Mexico_shapefile.shp")
 
 tt <- read_sf("Brazil_regions.shp")
 
+tt <- read_sf("Culturalreg.shp")
 
 #Reading in my data with latitude and longitude information
+setwd("L:/Krisztian/MasterLandraceTeoInbredGBS_collapseDist0.02_20210810")
 dataM <- as.data.frame(fread("MasterLandraceTeoInbredGBS_collapseDist0.02_forMDSv3.txt"))
 dataM <- dataM[which(dataM$`Proportion Missing`<.95),]
 dataM$Lat = as.numeric(dataM$Lat)
@@ -31,6 +33,9 @@ mexicopnts <- Mexico[ , c("Lat", "Long")]
 
 Brazilpnts <- Brazil[ , c("Lat", "Long")] 
 
+Americas <- dataM[which(dataM$Population%in%c("Landrace - Ames Stock Center","Landrace - RIMMA","Landrace - NSS","Landrace - AndeanMiguel","Landrace - SEED") & dataM$Lat!=""  & dataM$Elev!=""),]
+
+Americaspnt <- Americas[ , c("Lat", "Long")]
 #crs=4326 designates the Coordinate Reference Systems (In this case WGS84)
 dsf <- sf::st_as_sf(andeanpnts, coords=c("Long","Lat"), crs=4326)
 map <- sf::st_as_sf(tt)
@@ -40,6 +45,10 @@ map <- sf::st_as_sf(tt)
 
 dsf <- sf::st_as_sf(Brazilpnts, coords=c("Long","Lat"), crs=4326)
 map <- sf::st_as_sf(tt)
+
+dsf <- sf::st_as_sf(Americaspnt, coords=c("Long","Lat"), crs=4326)
+map <- sf::st_as_sf(tt)
+
 #Points must be transformed to planar as sf library assumes planar projections
 pnts_trans <- st_transform(dsf, 2163)
 tt_trans <- st_transform(tt, 2163)
@@ -56,7 +65,9 @@ andean$Region <- res$Name
 Mexico$Region <- res$id
 
 Brazil$Region <- res$name1
+
+Americas$Region <- res$name1
 #Writes out modified data frame to an excel file 
-write_xlsx(Brazil,"L:/Krisztian/MasterLandraceTeoInbredGBS_collapseDist0.02_20210810\\andeanregion.xlsx")
+write_xlsx(Americas,"L:/Krisztian/MasterLandraceTeoInbredGBS_collapseDist0.02_20210810\\Americasregion.xlsx")
 
 plot(map)

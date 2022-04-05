@@ -102,7 +102,6 @@ Bindtbl$lat = as.numeric(Bindtbl$lat)
 
 out="KMapAL.svg"
 svg(out)
-
 ggmap(us_main_map) +
   stat_density2d(aes(fill = label, alpha=..level..),
                                    geom = "polygon", bins=30,size =0.5, data = Bindtbl, contour=TRUE) +
