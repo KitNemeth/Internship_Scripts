@@ -15,7 +15,7 @@ dataM$Long = as.numeric(dataM$Long)
 dataM$Elev = as.numeric(dataM$Elev)
 
 Americas <- dataM[which(dataM$Population%in%c("Landrace - Ames Stock Center","Landrace - RIMMA","Landrace - NSS","Landrace - AndeanMiguel","Landrace - SEED") & dataM$Lat!=""  & dataM$Elev!=""),]
-Americaswithteo <- dataM[which(dataM$Population%in%c("Landrace - Ames Stock Center","Landrace - RIMMA","Landrace - NSS","Landrace - AndeanMiguel","Landrace - SEED","Teosinte") & dataM$Lat!=""  & dataM$Elev!=""),]
+Americaswithteo <- dataM[which(dataM$Population%in%c("Landrace - Ames Stock Center","Landrace - RIMMA","Landrace - NSS","Landrace - AndeanMiguel","Landrace - SEED","Teosinte") & dataM$Lat!=""),]
 
 mds_Americas <- MDS(dist = allDist,info = Americas,group = "Country",k = 2,main = "American Accessions",pdfFile = "MasterLandraceTeoInbredGBS_collapseDist0.02_Americas_MDS_Country.svg")
 
@@ -23,3 +23,6 @@ install.packages("colourvalues") #https://symbolixau.github.io/colourvalues/
 library(colourvalues)
 col <- colour_values(1:47, palette = "rainbow")
 
+library("xlsx")
+write.xlsx(Americaswithteo, file = "ALTEOlist.xlsx", 
+           sheetName="ALTEO", append=TRUE)

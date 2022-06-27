@@ -1,3 +1,7 @@
+install.packages("data.table")
+
+library(data.table)
+
 #' This subsets taxa in a dataframe based on a geographic grid... If you don't have lat lon as named columns in df it will return nULL
 #' @param df dataframe with  columns and lat, lon
 #' @param n number of taxa from each grid to be kept
@@ -39,20 +43,3 @@ subsetGrid <- function(df,n,gridsize,latColumn="lat", lonColumn="lon"){
   
   return(keep)
 }
-df <- Brazil
-keep <- subsetGrid(Brazil,1,0.5,"lat", "lon")
-keep <- keep[which(keep$Taxa!="nA"),]
-
-unique(keep$Country)
-
-length(which(Americas$Population=="Landrace - SEED"))
-library("writexl")
-write_xlsx(keep,"Americassubset.xlsx")
-
-Teosinte <- dataM[which(dataM$Population%in%("Teosinte")),]
-Teosinte <- Teosinte[which(Teosinte$Pedigree!="Z_diploperennis" & Teosinte$Pedigree!="Z_perennis?" & Teosinte$Pedigree!="Z_nicara" & Teosinte$Pedigree!="Z_diplop" & Teosinte$Pedigree!="Z_perenn" & Teosinte$Pedigree!="Z_perennis" & Teosinte$Pedigree!="Z_diploperennis?"),]
-
-Teosinte2 <- Teosinte[sample(nrow(Teosinte), 21), ]
-unique(Teosinte2$Accession)
-write_xlsx(Teosinte2,"Teosintesubset.xlsx")
-

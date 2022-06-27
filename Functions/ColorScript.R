@@ -1,4 +1,24 @@
+install.packages("data.table")
+
+library(data.table)
+
+#' Genereates R G B values for variables in a dataframe... If you don't have lat lon and elev as named columns in df it will return NULL
+#' @param df dataframe with  columns and lat, lon and elev
+#' @param Rvar column name that will be red
+#' @param Gvar column name that will be green
+#' @param Bvar column name that will be blue
+#' @return dataframe with a new column called 'Region' that is the intersece...
+#' @export
+
 putInRGBSpace <- function(df,Rvar=NULL,Gvar=NULL,Bvar=NULL) {
+  
+  df[,Rvar] <- as.numeric(df[,Rvar])
+  df[,Gvar] <- as.numeric(df[,Gvar])
+  df[,Bvar] <- as.numeric(df[,Bvar])
+  
+  keep <- which(is.na(df[,Rvar])==F & is.na(df[,Gvar])==F & is.na(df[,Bvar])==F)
+  out <- rep(NA,nrow(df))
+  
   if (is.null(Rvar)==F) df <- df[which(is.na(df[,Rvar])==F),]
   if (is.null(Gvar)==F) df <- df[which(is.na(df[,Gvar])==F),]
   if (is.null(Bvar)==F) df <- df[which(is.na(df[,Bvar])==F),]
@@ -13,10 +33,12 @@ putInRGBSpace <- function(df,Rvar=NULL,Gvar=NULL,Bvar=NULL) {
   if (is.null(Bvar)) {b <- rep(0,nrow(df))
   }else {b <- ((df[,Bvar]-min(df[,Bvar]))/(max(df[,Bvar])-min(df[,Bvar])))*255}
   print(rgb(r,g,b,maxColorValue = 255))
-  return(rgb(r,g,b,maxColorValue = 255))
+
+    out[keep] <- rgb(r,g,b,maxColorValue = 255)
+  return(out)
 }
 
-#example
+#example that produces plot to show colour scale produced
 pick <- sample(1:nrow(andean),10,F)
 alt <- andean[pick,"Elev"]
 lat <- andean[pick,"Lat"]
@@ -27,9 +49,15 @@ elev$combinedGeo_color <- putInRGBSpace(elev,Rvar = "lat",Gvar = "long", Bvar = 
 plot(elev$long,elev$lat,col=elev$combinedGeo_color,pch=19,cex=3)
 
 
+####feed dataframe with Lat, Long and Elev columns
+####Creates column with string replicated on every lines
 andean$combinedGeo <- rep("LLE",nrow(andean))
+####putInRGBSPACE function will create an RGB value for each specified column (e.g Red for Lat, Green for Long and Blue) for elev), 
 andean$combinedGeo_color <- putInRGBSpace(andean,Rvar = "Lat",Gvar = "Long",Bvar= "Elev")
 plot(andean$Lat,andean$Long,col=andean$combinedGeo_color,pch=19,cex=3)
+
+dataM$combinedGeo <- rep("LLE",nrow(dataM))
+dataM$combinedGeo_color <- putInRGBSpace(dataM,Rvar = "Lat",Gvar = "Long",Bvar= "Elev")
 
 andean$combinedLatLong <- rep("LatLong",nrow(andean))
 andean$combinedLatLong_color <- putInRGBSpace(andean,Rvar = "Lat",Gvar= "Long")
@@ -47,6 +75,10 @@ MexSA$combinedGeo <- rep("LatLongElev",nrow(MexSA))
 MexSA$combinedGeo_color <- putInRGBSpace(MexSA,Rvar = "Lat",Gvar = "Long",Bvar= "Elev")
 plot(MexSA$Lat,MexSA$Long,col=MexSA$combinedGeo_color,pch=19,cex=3)
 
-MexSA$combinedLatLong <- rep("LatLong",nrow(MexSA))
-MexSA$combinedLatLong_color <- putInRGBSpace(MexSA,Rvar = "Lat",Gvar= "Long")
+dataM$Lat <- as.numeric(dataM$Lat)
+dataM$Long <- as.numeric(dataM$Long)
+dataM$Elev <- as.numeric(dataM$Elev)
+
+dataM$combinedLatLong <- rep("LatLong",nrow(dataM))
+dataM$combinedLatLong_color <- putInRGBSpace(dataM,Rvar = "Lat",Gvar= "Long")
 plot(MexSA$Lat,MexSA$Long,col=MexSA$combinedLatLong_color,pch=19,cex=3)

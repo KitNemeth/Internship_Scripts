@@ -2,14 +2,23 @@
 ###Kelly Swarts, 2019
 
 Sys.setenv(lang="EN")
-library(Hmisc)
-library(RColorBrewer)
-library(bio3d)
-library(jsonlite)
-library(R.utils)
-library(stringr)
-library(rworldmap)
-library(elevatr)
+install.packages("Hmisc")
+install.packages("RColorBrewer")
+install.packages("bio3d")
+install.packages("jsonlite")
+install.packages("R.utils")
+install.packages("stringr")
+install.packages("rworldmap")
+install.packages("elevatr")
+
+library("Hmisc")
+library("RColorBrewer")
+library("bio3d")
+library("jsonlite")
+library("R.utils")
+library("stringr")
+library("rworldmap")
+library("elevatr")
 
 options(digits=6)
 
