@@ -103,7 +103,7 @@ setwd("L:/Krisztian/MasterLandraceTeoInbredGBS_collapseDist0.02_20210810")
 ```
 Specify the prefix for your admixture analysis results (named by Kelly not me)
 ```R
-file <- "MasterLandraceTeoInbredGBS_collapseDist0.02_collapseSEED_Americas-TeoSubset_minTaxa01_admixfilt_rmvCloseKin0.03_poly_minSiteCov0.5_minTaxaCov0.3_RmvHighLD_rmvThird" #"ZeaGBSv27_20150108AGPv3MatchSites_subsetBy12S_13S_RIMMA_JGSTeo_NFlint_TP_ALLsingleRep_HWEByDepth9_minTaxaCov.3_rmvThird_poly_minSiteCov.5_removeCloseKin0.15." #ZeaGBSv27_20150108AGPv3.hmp_subBy12S_13S_RIMMA_NAMHighCov_MR_TIL_Goldstein_TP15_JGSTeoHWEByDepth9_minTaxaCov.3_rmvThird_poly_minSiteCov.5_removeCloseKin.
+file <- "MasterLandraceTeoInbredGBS_collapseDist0.02_collapseSEED_Americas-TeoSubset_minTaxa01_admixfilt_rmvCloseKin0.03_poly_minSiteCov0.5_minTaxaCov0.3_RmvHighLD_rmvThird" 
 ```
 Specify your order file which you will use to order the taxa in the plot 
 Use the format shown in the table below, the ORigOrder column specifices the order of the taxa
@@ -203,8 +203,8 @@ dev.off outputs the .svg to the specified working directory
 ```R
 dev.off()
 ```
-The final result should look like this 
-![image](https://user-images.githubusercontent.com/89838666/201960834-5e4a2bf5-e23d-4c15-8e19-52b70b032af6.png)
+The final result should look like this:
+![Picture4](https://user-images.githubusercontent.com/89838666/201969481-3ea54cb0-db46-411a-8994-7ae8eb0c2280.jpg)
 
 Next you generate the cross-validation plot and FST plot for the ks
 
@@ -250,4 +250,121 @@ dev.off outputs the second part of the figure
 ```R
 dev.off()
 ```
-The final result should look like this 
+The final result should look like this:
+![Picture7](https://user-images.githubusercontent.com/89838666/201969546-d21db15a-2b9a-437d-af41-137059b5a925.jpg)
+
+## Ancestry mapping 
+Now we can use our admixture data to gnerate a geogrphic ancestry map
+
+#Preparing the data
+Firstly install and load data.table
+```R
+install.packages("data.table")
+library(data.table)
+```
+Now run the Ancestry Density Function 
+```R
+ancestrydensity <- function(file, order, k, latColumn="lat", lonColumn="lon") {
+  tbl=read.table(paste(file,".",k,".Q",sep = ""))
+  match <- match(x = read.table(paste(file,"fam",sep="."),header=F,as.is=T)[,2],table = order$OrigName)
+  order <- order[match,]
+  tbl <- cbind(tbl,order)
+  tbl <- cbind(tbl,order$OrigName)
+  tbl <- tbl[order(tbl$OrigOrder),]
+
+  ks <- tbl[0,]
+  ks$V100 <- rep(paste(""),0)
+  ks$label <- rep(paste(""),0)
+  
+  for (i in 1:k){
+    curk <- tbl
+    vcol <- paste("V",i,sep="")
+    curk$V100 <- curk[,vcol] * 100
+    curk$V100 <- signif(curk$V100 ,2)
+    curk$V100 <- round(curk$V100 ,0)
+    curk <- curk[ which(curk$V100 > 0),]
+    curk <- as.data.frame(lapply(curk, rep, curk$V100))
+    curk$label <- rep(paste("K", i, sep = ""),nrow(curk))
+    ks <- rbind(ks,curk)
+ 
+  }
+  latCol <- which(tolower(latColumn)==tolower(colnames(ks)))
+  lonCol <- which(tolower(lonColumn)==tolower(colnames(ks)))
+  colnames(ks)[latCol] <- "lat"
+  colnames(ks)[lonCol] <- "lon" 
+  return(ks)
+}
+```
+
+Now set the working directory
+```R
+setwd("L:/Krisztian/MasterLandraceTeoInbredGBS_collapseDist0.02_20210810")
+```
+This function creates an input file for density maps using the admixture data
+You need to specify the input tbl file, which comes from admixture results, Just write the prefix of the file (prefix.k.Q)
+You also need to specify the best k 
+The output is a table where the number of observations is replicated for each k
+```R
+Bindtbl <- ancestrydensity(file = "MasterLandraceTeoInbredGBS_collapseDist0.02_collapseSEED_Americas-TeoSubset_minTaxa01_admixfilt_rmvCloseKin0.03_poly_minSiteCov0.5_minTaxaCov0.3_RmvHighLD_rmvThird"
+,order = fread("TaxaOrder_AL.txt", header=T),k = 8, latColumn="Latitude", lonColumn="Longitude")
+```
+Bindtbl contains the data from which we can generate an ancestry map
+
+#Ancestry map plotting 
+Install and load required packages
+```R
+install.packages("ggplot2")
+install.packages("ggmap")
+install.packages("maps")
+install.packages("mapdata")
+install.packages("readr")
+install.packages("dplyr")
+install.packages("data.table")
+install.packages("colourvalues")
+install.packages("svglite")
+
+library(colourvalues)
+library(ggplot2)
+library(ggmap)
+library(maps)
+library(mapdata)
+library(readr)
+library(dplyr)
+library(data.table)
+library(svglite)
+```
+First we generate the georgaphic map, specifiying the coordinates and the map type
+```R              
+us_bbox2 <- c(left = -120, bottom = -40, right = -30, top = 40)
+us_main_map <- get_stamenmap(us_bbox2, zoom = 5, maptype = "toner-lite")
+```
+Now out output the map
+```R
+out="KMapAL.svg"
+svg(out)
+```
+You can alter bins to give you different levels of density on the map
+Altering size changes the size of the point
+Use scale fill to spceificy the colours for each k (match it to the colours used in the previous admixture plot)
+```R
+ggmap(us_main_map) +
+  stat_density2d(aes(fill = label, alpha=..level..),
+                                   geom = "polygon", bins=30,size =0.5, data = Bindtbl, contour=TRUE) +
+  scale_fill_manual(values=c("K1"= "#59398d",
+                             "K2" = "#6d83da",
+                             "K3" = "#cf9d3a",
+                             "K4" = "#b54673",
+                             "K5" = "#45c097",
+                             "K6" = "#ba4c46",
+                             "K7" = "#968a3d",
+                             "K8" = "#bb6130")) +
+  geom_point(data = tbl, size=0.3, aes(x = lon, y = lat,)) +
+  theme_classic()   
+  ```
+  dev.off outputs the map
+  ```R
+dev.off()
+```
+The final result should look like this:
+
+![Picture8](https://user-images.githubusercontent.com/89838666/201974422-d827884d-ee6f-4cbf-a548-0ee7a3db9a53.jpg)
